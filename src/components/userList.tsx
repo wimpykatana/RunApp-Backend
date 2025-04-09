@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { db } from '@/firebaseConfig'
 import { collection, getDocs } from 'firebase/firestore'
 
@@ -16,7 +16,7 @@ const UsersList = () => {
 
     const usersCollectionRef = collection(db, "users");
 
-    const fetchMovies = async () => {
+    const fetchUsers = useCallback(async () => {
         try {
             const data = await getDocs(usersCollectionRef);
             setUsers(data.docs.map((doc) => ({ id: doc.id, ...doc.data() } as User)));
@@ -24,12 +24,12 @@ const UsersList = () => {
         } catch (error) {
             console.error("Error fetching user: ", error);
         }
-    }
+    }, [usersCollectionRef]);
 
 
     useEffect(() => {
-        fetchMovies();
-    }, []);
+        fetchUsers();
+    }, [fetchUsers]);
 
     if (loading) {
         return <div>Loading...</div>;
