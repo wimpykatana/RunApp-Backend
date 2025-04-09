@@ -39,12 +39,16 @@ const getUserByUID = async (uid: string) => {
 
 export async function GET(
     request: Request,
-    { params }: { params: {uid: string} }
+    //{ params }: { params: {uid: string} }
 ) {
     try {
         // Get the UID from the URL parameter
-        const { uid } = params;
-        console.log("Searching for user with uid:", uid);
+        //const { uid } = params;
+        //console.log("Searching for user with uid:", uid);
+
+        // Extract the UID from the URL path
+        const url = new URL(request.url);
+        const uid = url.pathname.split("/").pop(); // Extract the last part of the path
         
         // If no UID is provided, return a 400
         if (!uid) {
@@ -106,7 +110,7 @@ export async function GET(
         );
         
     } catch (error) {
-        console.error(`Error fetching user with ID ${params.uid}:`, error);
+        console.error(`Error fetching user with this ID:`, error);
         return new Response(
         JSON.stringify({ 
             message: "Failed to retrieve user", 
